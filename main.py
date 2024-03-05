@@ -8,8 +8,6 @@ import database
 def job():
     accounts = database.read_accounts()
     for account in accounts:
-        if account.host != 'https://harmonyhomes.amocrm.ru/':
-            continue
         try:
             session = requests.post(
                 url='http://amocrm.avatarex.tech/create-tokens/',
@@ -21,7 +19,7 @@ def job():
             print(session)
             database.update_session(account, session['answer'])
         except Exception as e:
-            print(e)
+            print(account.host, e)
 
 
 schedule.every(10).minutes.do(job)
