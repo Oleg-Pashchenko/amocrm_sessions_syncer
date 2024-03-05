@@ -16,10 +16,10 @@ def job():
                     'amo_email': account.email.strip(),
                     'amo_password': account.password.strip()
                 }).json()
-            print(session)
             database.update_session(account, session['answer'])
+
         except Exception as e:
-            print(account.host, e)
+            print(account.host, 'error')
 
 
 schedule.every(10).minutes.do(job)
