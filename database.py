@@ -45,6 +45,7 @@ def read_accounts():
 
     Session = sessionmaker(bind=site_engine)
     session = Session()
+    session.expire_all()
 
     accounts = session.query(AmoCRM).all()
     session.close()

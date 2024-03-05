@@ -8,7 +8,7 @@ import database
 def job():
     accounts = database.read_accounts()
     for account in accounts:
-        if account.host != 'https://saleschef.amocrm.ru/':
+        if account.host != 'https://harmonyhomes.amocrm.ru/':
             continue
         try:
             session = requests.post(
@@ -18,6 +18,7 @@ def job():
                     'amo_email': account.email.strip(),
                     'amo_password': account.password.strip()
                 }).json()
+            print(session)
             database.update_session(account, session['answer'])
         except Exception as e:
             print(e)
@@ -27,5 +28,6 @@ schedule.every(10).minutes.do(job)
 
 print('completed')
 while True:
+    job()
     schedule.run_pending()
     time.sleep(1)
