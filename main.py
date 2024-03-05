@@ -17,15 +17,16 @@ def job():
                     'amo_password': account.password.strip()
                 }).json()
             database.update_session(account, session['answer'])
-
+            print(account.host)
         except Exception as e:
             print(account.host, 'error')
 
 
 schedule.every(10).minutes.do(job)
 
+job()
 print('completed')
+
 while True:
-    job()
     schedule.run_pending()
     time.sleep(1)
