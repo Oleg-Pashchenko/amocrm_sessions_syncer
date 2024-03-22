@@ -9,7 +9,7 @@ def job():
     accounts = database.read_accounts()
     for account in accounts:
         try:
-            if '@' in account.host:
+            if '@' in account.email:
                 session = requests.post(
                     url='http://amocrm.avatarex.tech/create-tokens/',
                     json={
