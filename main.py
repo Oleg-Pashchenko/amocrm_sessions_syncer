@@ -32,7 +32,7 @@ def job():
             database.update_session(account, session['answer'])
             print(account['host'])
         except Exception as e:
-            print(account['host'], 'error')
+            print(account['host'], 'error', e)
 
 
 schedule.every(10).minutes.do(job)

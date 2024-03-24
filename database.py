@@ -83,13 +83,13 @@ def update_session(account: AmoCRM, session_data):
     session = Session()
 
     # Assuming 'account' contains an identifier for the session
-    db_session = session.query(AmoCRMSession).filter(AmoCRMSession.host == account.host).first()
+    db_session = session.query(AmoCRMSession).filter(AmoCRMSession.host == account['host']).first()
 
     if db_session:
         # Update existing session
         db_session.access_token = session_data['access_token']
         db_session.refresh_token = session_data['refresh_token']
-        db_session.host = account.host
+        db_session.host = account['host']
         db_session.amojo_id = session_data['amojo_id']
         db_session.chat_token = session_data['chat_token']
         db_session.headers = session_data['headers']
@@ -98,7 +98,7 @@ def update_session(account: AmoCRM, session_data):
         new_session = AmoCRMSession(
             access_token=session_data['access_token'],
             refresh_token=session_data['refresh_token'],
-            host=account.host,
+            host=account['host'],
             amojo_id=session_data['amojo_id'],
             chat_token=session_data['chat_token'],
             headers=session_data['headers']
