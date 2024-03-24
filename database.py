@@ -16,6 +16,7 @@ class AmoCRM(Base):
     email = Column(String)
     password = Column(String)
     host = Column(String)
+    widget_id = Column(String)
 
     def __repr__(self):
         return f"<AmoCRM(id={self.id}, email='{self.email}', password='{self.password}', host='{self.host}')>"
@@ -33,6 +34,15 @@ class AmoCRMSession(Base):
     headers = Column(JSON)
 
 
+class WidgetAmo(Base):
+    __tablename__ = 'home_widgetamo'
+    id = Column(Integer, primary_key=True)
+
+    client_id = Column(String)
+    cleint_secret = Column(String)
+    state = Column(String)
+
+
 def read_accounts():
     site_engine = sqlalchemy.create_engine(
         f'postgresql://{os.getenv("SITE_DB_USER")}:{os.getenv("SITE_DB_PASSWORD")}'
@@ -48,8 +58,18 @@ def read_accounts():
     session.expire_all()
 
     accounts = session.query(AmoCRM).all()
+    response = []
+    for account in accounts:
+        client_id = ''
+        client_secret = ''
+        if account.widget_id is not None:
+            widget = session.query(WidgetAmo).filter_by(client_id=account.widget_id).first()
+            client_id = widget.client_id
+            client_secret = widget.cleint_secret
+        response.append({'client_id': client_id, 'client_secret': client_secret, 'host': account.host, 'email': account.email, 'password': account.password})
+
     session.close()
-    return accounts
+    return response
 
 
 def update_session(account: AmoCRM, session_data):
