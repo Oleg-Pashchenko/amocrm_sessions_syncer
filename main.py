@@ -10,6 +10,7 @@ def job():
     for account in accounts:
         if 'bitrix24.ru' in account['host']:
             continue
+
         try:
             if '@' in account['email']:
                 session = requests.post(
@@ -29,6 +30,7 @@ def job():
                 session = requests.post(
                     url='http://amocrm.avatarex.tech/add-tokens/',
                     json=data).json()
+            print(session)
             database.update_session(account, session['answer'])
             print(account['host'])
         except Exception as e:
