@@ -8,8 +8,6 @@ import database
 def job():
     accounts = database.read_accounts()
     for account in accounts:
-        if 'bukhonin1991' not in account['host'] and 'olegback' not in account['host']:
-            continue
         if 'bitrix24.ru' in account['host']:
             continue
 
