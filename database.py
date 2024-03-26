@@ -56,6 +56,13 @@ def read_accounts():
     Session = sessionmaker(bind=site_engine)
     session = Session()
     session.expire_all()
+    api_engine = sqlalchemy.create_engine(
+        f'postgresql://{os.getenv("API_DB_USER")}:{os.getenv("API_DB_PASSWORD")}'
+        f'@{os.getenv("API_DB_HOST")}:5432/{os.getenv("API_DB_NAME")}',
+        pool_pre_ping=True
+    )
+    Session_Api = sessionmaker(bind=api_engine)
+    session_api = Session_Api()
 
     accounts = session.query(AmoCRM).all()
     response = []
@@ -66,7 +73,14 @@ def read_accounts():
             widget = session.query(WidgetAmo).filter_by(client_id=account.widget_id).first()
             client_id = widget.client_id
             client_secret = widget.cleint_secret
-        response.append({'client_id': client_id, 'client_secret': client_secret, 'host': account.host, 'email': account.email, 'password': account.password})
+
+        address = account.email
+        db_session = session_api.query(AmoCRMSession).filter(AmoCRMSession.host == account.host).first()
+        if db_session and '@' not in address:
+            print('yes')
+            address = db_session.refresh_token
+
+        response.append({'client_id': client_id, 'client_secret': client_secret, 'host': account.host, 'email': address, 'password': account.password})
 
     session.close()
     return response
