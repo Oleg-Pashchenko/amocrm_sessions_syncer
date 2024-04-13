@@ -77,7 +77,6 @@ def read_accounts():
         address = account.email
         db_session = session_api.query(AmoCRMSession).filter(AmoCRMSession.host == account.host).first()
         if db_session and '@' not in address:
-            print('yes')
             address = db_session.refresh_token
 
         response.append({'client_id': client_id, 'client_secret': client_secret, 'host': account.host, 'email': address, 'password': account.password})

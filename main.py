@@ -8,7 +8,7 @@ import database
 def job():
     accounts = database.read_accounts()
     for account in accounts:
-        if 'bitrix24.ru' in account['host']:
+        if 'bitrix24' in account['host']:
             continue
 
         try:
@@ -30,9 +30,7 @@ def job():
                 session = requests.post(
                     url='http://amocrm.avatarex.tech/add-tokens/',
                     json=data).json()
-            print(session)
             database.update_session(account, session['answer'])
-            print(account['host'])
         except Exception as e:
             print(account['host'], 'error', e)
 
